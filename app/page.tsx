@@ -5,21 +5,19 @@
  */
 "use client"
 
-import { useState } from "react"
+import { ChangeEvent, FormEvent, useState } from "react"
 import Link from "next/link"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Slider, SliderTrack, SliderRange, SliderThumb } from "@/components/ui/slider"
+import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import Image from "next/image";
-import BrandingImage from "./mensh-branding.png";
-import { ArrowBigUpIcon, ChevronRightIcon } from "lucide-react"
-import { ChevronDownIcon } from "@radix-ui/react-icons"
+import { ArrowBigUpIcon, ChevronDown, ChevronRight, ChevronUp } from "lucide-react"
 
-const defaultSearchResults = [
+const defaultSearchResults: Result[] = [
   {
     id: 1,
     title: "Hilarious Cat Fails Compilation",
@@ -121,116 +119,146 @@ const defaultSearchResults = [
     videoUrl: "https://www.youtube.com/embed/EvcCiOp1zvI",
   },
 ]
+interface Result {
+  id: number;
+  title: string;
+  postedDate: string;
+  views: number;
+  comments: number;
+  avatar: string;
+  username: string;
+  videoUrl: string;
+}
+interface Comment {
+  id: number;
+  username: string;
+  avatar: string;
+  content: string;
+  postedDate: string;
+  score: number;
+}
+const defaultComments:Comment[] = [
+  {
+    id: 1,
+    username: "@jaredpalmer",
+    avatar: "/avatars/jaredpalmer-avatar.jpg",
+    content: "This is such a funny video!",
+    postedDate: "2 days ago",
+    score: .72,
+  },
+  {
+    id: 2,
+    username: "@shadcn",
+    avatar: "/avatars/shadcn-avatar.jpg",
+    content: "Aww, the cat is so cute!",
+    postedDate: "1 day ago",
+    score: .62,
+  },
+  {
+    id: 3,
+    username: "@maxleiter",
+    avatar: "/avatars/maxleiter-avatar.jpg",
+    content: "I can't stop watching this!",
+    postedDate: "1 day ago",
+    score: .51,
+  },
+  {
+    id: 4,
+    username: "@shuding_",
+    avatar: "/avatars/shuding-avatar.jpg",
+    content: "Haha, the cat's expression is priceless!",
+    postedDate: "12 hours ago",
+    score: .3,
+  },
+  {
+    id: 5,
+    username: "@vercel",
+    avatar: "/avatars/vercel-avatar.jpg",
+    content: "This is the best cat video I've seen all week!",
+    postedDate: "6 hours ago",
+    score: .8,
+  },
+  {
+    id: 6,
+    username: "@iamwillpursell",
+    avatar: "/avatars/iamwillpursell-avatar.jpg",
+    content: "I wish I had a cat that playful!",
+    postedDate: "3 hours ago",
+    score: .1,
+  },
+  {
+    id: 7,
+    username: "@HackSoft",
+    avatar: "/avatars/hacksoft-avatar.jpg",
+    content: "Cats are the best!",
+    postedDate: "1 hour ago",
+    score: .9,
+  },
+  {
+    id: 8,
+    username: "@greed7513",
+    avatar: "/avatars/greed7513-avatar.jpg",
+    content: "I could watch this all day!",
+    postedDate: "30 minutes ago",
+    score: .6,
+  },
+  {
+    id: 9,
+    username: "@iamwillpursell",
+    avatar: "/avatars/iamwillpursell-avatar.jpg",
+    content: "Haha, the cat's reaction is priceless!",
+    postedDate: "15 minutes ago",
+    score: .05,
+  },
+  {
+    id: 10,
+    username: "@HackSoft",
+    avatar: "/avatars/hacksoft-avatar.jpg",
+    content: "This is the cutest thing I've seen all week!",
+    postedDate: "5 minutes ago",
+    score: .6,
+  },
+]
+
+interface Video extends Result{ }
+
 export default function Component() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [searchResults, setSearchResults] = useState([])
-  const [selectedVideo, setSelectedVideo] = useState(null)
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      username: "@jaredpalmer",
-      avatar: "/avatars/jaredpalmer-avatar.jpg",
-      content: "This is such a funny video!",
-      postedDate: "2 days ago",
-      score: .72,
-    },
-    {
-      id: 2,
-      username: "@shadcn",
-      avatar: "/avatars/shadcn-avatar.jpg",
-      content: "Aww, the cat is so cute!",
-      postedDate: "1 day ago",
-      score: .62,
-    },
-    {
-      id: 3,
-      username: "@maxleiter",
-      avatar: "/avatars/maxleiter-avatar.jpg",
-      content: "I can't stop watching this!",
-      postedDate: "1 day ago",
-      score: .51,
-    },
-    {
-      id: 4,
-      username: "@shuding_",
-      avatar: "/avatars/shuding-avatar.jpg",
-      content: "Haha, the cat's expression is priceless!",
-      postedDate: "12 hours ago",
-      score: .3,
-    },
-    {
-      id: 5,
-      username: "@vercel",
-      avatar: "/avatars/vercel-avatar.jpg",
-      content: "This is the best cat video I've seen all week!",
-      postedDate: "6 hours ago",
-      score: .8,
-    },
-    {
-      id: 6,
-      username: "@iamwillpursell",
-      avatar: "/avatars/iamwillpursell-avatar.jpg",
-      content: "I wish I had a cat that playful!",
-      postedDate: "3 hours ago",
-      score: .1,
-    },
-    {
-      id: 7,
-      username: "@HackSoft",
-      avatar: "/avatars/hacksoft-avatar.jpg",
-      content: "Cats are the best!",
-      postedDate: "1 hour ago",
-      score: .9,
-    },
-    {
-      id: 8,
-      username: "@greed7513",
-      avatar: "/avatars/greed7513-avatar.jpg",
-      content: "I could watch this all day!",
-      postedDate: "30 minutes ago",
-      score: .6,
-    },
-    {
-      id: 9,
-      username: "@iamwillpursell",
-      avatar: "/avatars/iamwillpursell-avatar.jpg",
-      content: "Haha, the cat's reaction is priceless!",
-      postedDate: "15 minutes ago",
-      score: .05,
-    },
-    {
-      id: 10,
-      username: "@HackSoft",
-      avatar: "/avatars/hacksoft-avatar.jpg",
-      content: "This is the cutest thing I've seen all week!",
-      postedDate: "5 minutes ago",
-      score: .6,
-    },
-  ])
+  const [selectedVideo, setSelectedVideo] = useState<Video|null>(null)
+  const [searchResults, setSearchResults] = useState<Result[]|null|undefined>()
+  const [comments, setComments] = useState<Comment[]|null|undefined>()
   const [commentThreshold, setCommentThreshold] = useState(.6)
   const [hideRedactedComments, setHideRedactedComments] = useState(false)
   const [canEditThreshold, setCanEditThreshold] = useState(false)
 
-  const handleSearch = (e) => {
+  const handleSearch = (e:FormEvent) => {
     e.preventDefault()
     const results = defaultSearchResults.filter((video) => video.title.toLowerCase().includes(searchQuery.toLowerCase()))
-    setSearchResults(results)
+    if (results) {
+      setSearchResults(results)
+    } else {
+      setSearchResults(null)
+    }
   }
-  const handleInputChange = (e) => {
-    setSearchQuery(e.target.value)
+  const handleInputChange = (e: ChangeEvent) => {
+    setSearchQuery((e.target as HTMLInputElement).value)
   }
-  const handleVideoSelect = (video) => {
+  const handleVideoSelect = (video:Result) => {
     setSearchResults([])
     setSearchQuery(video.title)
-    setSelectedVideo()
-    setTimeout(()=>setSelectedVideo(video),600)
+    setSelectedVideo(null) // empty
+    setTimeout(() => {
+      setSelectedVideo(video);
+      setComments(defaultComments);
+      }, 600 // set again
+    )
   }
   const resetSelection = () => {
-    setSelectedVideo(undefined)
+    setSelectedVideo(null)
     setSearchResults(defaultSearchResults)
     setSearchQuery('')
   }
-  const handleCommentThresholdChange = (value) => {
+  const handleCommentThresholdChange = (value:number) => {
     setCommentThreshold(value)
   }
   const handleHideRedactedComments = () => {
@@ -305,14 +333,14 @@ export default function Component() {
                 <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
                   Find your Video
                 </h1>
-                <form className="w-full max-w-lg" onSubmit={handleSearch}>
+                <form className="w-full max-w-lg" onSubmit={(e)=>handleSearch(e)}>
                   <div className="relative">
                     <Input
                       type="text"
                       placeholder="Search for a video"
                       className="w-full"
                       value={searchQuery}
-                      onChange={handleInputChange}
+                      onChange={(e)=>handleInputChange(e)}
                       onFocus={() => setSearchResults(defaultSearchResults)}
                       onBlur={() => setTimeout(()=>setSearchResults([]), 100)}
                     />
@@ -321,7 +349,7 @@ export default function Component() {
                       <SearchIcon className="h-5 w-5" />
                     </Button>
 
-                    {searchResults.length > 0 && (
+                    {searchResults && searchResults.length > 0 && (
                       <div className="search-results absolute top-full left-0 w-full bg-slate-50 dark:bg-gray-800 rounded-lg shadow-lg mt-2 z-10 max-h-[300px] overflow-y-auto">
                         <ul className="py-2">
                           {searchResults.map((result) => (
@@ -351,15 +379,18 @@ export default function Component() {
                   </div>
                 </form>
 
-                {searchResults.length || selectedVideo ?  (<p></p>) : (
+                {searchResults && searchResults.length || selectedVideo ?  (<p></p>) : (
                   <blockquote className="w-full bg-gray-200 rounded-xl p-9 pt-7 text-center  drop-shadow-lg hover:drop-shadow-xl pb-5">
-                    <p className="text-5xl font-serif text-center text-red-600 gluten-family mb-3">
+                    <p className="text-3xl font-serif text-center text-red-600 gluten-family mb-3">
                       Simplify engagement
                     </p>
-                    <marquee className="mb-5 text-sm text-red-900" behaviour="alternate">
+                    {/* <marquee className="mb-5 text-sm text-red-900" behaviour="alternate">
                       “Say goodbye to time-wasting comments and join your community!” 😊
-                    </marquee>
-                    <Button variant="destructive" onClick={()=>document.querySelector('input[type="text"]').focus()}>
+                    </marquee> */}
+                    <p className="mb-5 text-sm text-red-900" >
+                      “Say goodbye to time-wasting comments and join your community!” 😊
+                    </p>
+                    <Button variant="destructive" onClick={()=>(document.querySelector('input[type="text"]') as HTMLInputElement)?.focus()}>
                       Get started
                       <ArrowBigUpIcon />
                     </Button>
@@ -371,107 +402,105 @@ export default function Component() {
           </div>
         </section>
 
-        {
-          selectedVideo ? (
-            <section className="bg-gray-50">
-          <div className="mt-4 video-details w-full pt-6 container mx-auto ">
-              
-            <div className="mt-3">
-              <details className="w-1/2 comments-title open:bg-white dark:open:bg-slate-900 open:ring-1 open:ring-black/5 dark:open:ring-white/10 open:shadow-lg p-2 rounded-lg">
-                <summary title={(comments.filter((comment) => (comment.score < commentThreshold)).length) + ' comments blocked'}
-                  className="text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none flex items-center mb-3">
-                  <Badge size="xsmall">
-                      {
-                        comments
-                        .filter((comment) => (comment.score < commentThreshold)).length
-                      }
-                  </Badge>
-                  <h3 className="font-bold text-lg pl-5 cursor-pointer">
-                    Latest Comments ({hideRedactedComments ? (comments.filter(comment => comment.score >= commentThreshold)).length : comments.length})
-                  </h3>
-                </summary>
-                
-                <div className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
-                  {(
-                    <div className="flex flex-col gap-4 px-10">
-                      <h3 className="font-medium text-md">
-                        YouTube Mensh Options:
-                      </h3>
-                      <div title={!canEditThreshold ? "Disabled": ""} className={'flex items-center gap-4' + (!canEditThreshold ? ' text-gray-500 bg-gray-100': '')}>
-                        <Label htmlFor="commentThreshold" onDoubleClick={() => toggleCanEditThreshold()}>
-                          Comment Threshold 
-                        </Label>
-                        <Slider
-                          min={0}
-                          max={1}
-                          step={.1}
-                          value={[commentThreshold]}
-                          onValueChange={handleCommentThresholdChange}
-                          className="flex-1"
-                          id="commentThreshold"
-                          disabled={!canEditThreshold}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="hideRedactedComments" className="flex items-center gap-4">
-                          <Checkbox
-                            id="hideRedactedComments"
-                            checked={hideRedactedComments}
-                            onCheckedChange={handleHideRedactedComments}
+        <section className="bg-gray-50 mt-10 pb-10" style={{minHeight:'50vh'}}>
+          {selectedVideo ? (
+            <div className="mt-4 video-details w-full pt-6 container mx-auto ">
+              <div className="mt-3">
+                <details className="w-1/2 comments-title open:bg-white dark:open:bg-slate-900 open:ring-1 open:ring-black/5 dark:open:ring-white/10 open:shadow-lg p-2 rounded-lg">
+                  <summary title={(comments?.filter((comment) => (comment.score < commentThreshold)).length) + ' comments blocked'}
+                    className="hover:bg-white text-sm leading-6 text-slate-900 dark:text-white font-semibold select-none flex items-center mb-3">
+                    <Badge size="xsmall">
+                        {
+                          comments?.filter((comment) => (comment.score < commentThreshold)).length
+                        }
+                    </Badge>
+                    <h3 className="w-full font-bold text-lg pl-5 cursor-pointer flex justify-between">
+                      <span>
+                        Latest Comments ({hideRedactedComments ? (comments?.filter(comment => comment.score >= commentThreshold))?.length : comments?.length})
+                      </span>
+                      <span className="text-gray-400">
+                      <ChevronDown className="icon" id="closed" />
+                      <ChevronUp className="icon" id="open" />
+                      </span>
+                    </h3>
+                  </summary>
+                  
+                  <div className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                    {(
+                      <div className="flex flex-col gap-4 px-10">
+                        <h3 className="font-medium text-md">
+                          YouTube Mensh Options:
+                        </h3>
+                        <div title={!canEditThreshold ? "Disabled": ""} className={'flex items-center gap-4' + (!canEditThreshold ? ' text-gray-500 bg-gray-100': '')}>
+                          <Label htmlFor="commentThreshold" onDoubleClick={() => toggleCanEditThreshold()}>
+                            Comment Threshold 
+                          </Label>
+                          <Slider
+                            min={0}
+                            max={1}
+                            step={.1}
+                            value={[commentThreshold]}
+                            onValueChange={(e)=>handleCommentThresholdChange([...e][0])}
+                            className="flex-1"
+                            id="commentThreshold"
+                            disabled={!canEditThreshold}
                           />
-                          Hide comments that have been redacted </Label> 
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </details>
-              
-              <div className="grid gap-4">
-                {comments
-                  .filter((comment) => (hideRedactedComments ? comment.score >= commentThreshold : true))
-                  .map((comment) => {
-                    var commentClasses = ['mt-1'];
-                    if (comment.score < commentThreshold) {
-                      commentClasses.push('is-redacted')
-                    }
-                    return <div key={comment.id} className="flex items-start gap-4 hover:drop-shadow hover:bg-white" title={comment.score}>
-                        <Avatar>
-                          <Image width="48" height="48" src={comment.avatar} alt={comment.username} />
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                            <span className="font-medium">{comment.username}</span>
-                            <span>{comment.postedDate}
-                            </span>
-                          </div>
-                          <p className={commentClasses.join(' ')}>
-                            {comment.content}
-                          </p>
+                        </div>
+                        <div>
+                          <Label htmlFor="hideRedactedComments" className="flex items-center gap-4">
+                            <Checkbox
+                              id="hideRedactedComments"
+                              checked={hideRedactedComments}
+                              onCheckedChange={handleHideRedactedComments}
+                            />
+                            Hide comments that have been redacted </Label> 
                         </div>
                       </div>
-                  })
-                }
+                    )}
+                  </div>
+                </details>
+                
+                <div className="grid gap-4">
+                  {comments?.filter((comment) => (hideRedactedComments ? comment.score >= commentThreshold : true))
+                    .map((comment) => {
+                      var commentClasses = ['mt-1'];
+                      if (comment.score < commentThreshold) {
+                        commentClasses.push('is-redacted')
+                      }
+                      return <div key={comment.id} className="flex items-start gap-4 hover:drop-shadow hover:bg-white" title={''+comment.score}>
+                          <Avatar>
+                            <Image width="48" height="48" src={comment.avatar} alt={comment.username} />
+                          </Avatar>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                              <span className="font-medium">{comment.username}</span>
+                              <span>{comment.postedDate}
+                              </span>
+                            </div>
+                            <p className={commentClasses.join(' ')}>
+                              {comment.content}
+                            </p>
+                          </div>
+                        </div>
+                    })
+                  }
+                </div>
+                <p>
+                  {comments?.filter((comment) => (comment.score >= commentThreshold)).length === 0 && hideRedactedComments ? 'No Comments Available': ''}
+                </p>
               </div>
-              <p>
-                {comments.filter((comment) => (comment.score >= commentThreshold)).length === 0 && hideRedactedComments ? 'No Comments Available': ''}
-              </p>
             </div>
-          </div>
-        </section>
           ) : (
-              <p></p>
+            <p></p>  
           )
-        }
-
-        
-      
+          }
+        </section>
       </main>
     </div>
-
   )
 }
 
-function SearchIcon(props) {
+function SearchIcon(props:any) {
   return (
     <svg
       {...props}

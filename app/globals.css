@@ -53,6 +53,19 @@ body {
     "slnt" 0;
 }
 
+.comments-title[open] #open.icon {
+  display: inline-block;
+}
+.comments-title[open] #closed.icon {
+  display: none;
+}
+.comments-title:not([open]) #open.icon {
+  display: none;
+}
+.comments-title:not([open]) #closed.icon {
+  display: inline-block;
+}
+
 .comments-title[open] {
   margin-bottom: 2rem;
 }

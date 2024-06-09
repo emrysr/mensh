@@ -125,7 +125,7 @@ export function YoutubeSearch() {
   )
 }
 
-function CogIcon(props) {
+function CogIcon(props:any) {
   return (
     <svg
       {...props}
@@ -158,7 +158,7 @@ function CogIcon(props) {
 }
 
 
-function SearchIcon(props) {
+function SearchIcon(props:any) {
   return (
     <svg
       {...props}
@@ -179,7 +179,7 @@ function SearchIcon(props) {
 }
 
 
-function YoutubeIcon(props) {
+function YoutubeIcon(props:any) {
   return (
     <svg
       {...props}
