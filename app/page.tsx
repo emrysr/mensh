@@ -5,7 +5,7 @@
  */
 "use client"
 
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useState, useEffect } from "react"
 import Link from "next/link"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,9 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image";
 import { ArrowBigUpIcon, ChevronDown, ChevronRight, ChevronUp } from "lucide-react"
 import { SparklesCore } from "@/components/ui/sparkles";
+import { Gluten } from "next/font/google";
+
+const gluten = Gluten({ subsets: ["latin"] });
 
 interface Result {
   id: number;
@@ -30,7 +33,9 @@ interface Result {
   likes: number;
   dislikes: number;
 }
+
 interface Video extends Result{ }
+
 interface Comment {
   id: number;
   username: string;
@@ -40,6 +45,7 @@ interface Comment {
   likes: number;
   dislikes: number;
 }
+
 interface Match {
   word: string; index: number; length: number; score: number;
 }
@@ -173,79 +179,77 @@ const defaultSearchResults: Result[] = [
     likes: 117,
     dislikes: 5,
   },
-]
+];
+
 const comment_tokens = [
   {
     comment_id: 1,
-    score: 0.2,
+    score: 0.3,
     tokens: [
-      { word: "trash", index: 13, length: 5, score: 1 },
-      { word: "dumb", index: 72, length: 4, score: 1 },
-      { word: "brain-dead", index: 55, length: 10, score: 1 },
+      { word: "trash", index: 13, length: 5, score: 0.2},
+      { word: "dumb", index: 72, length: 4, score: 0.3 },
+      { word: "brain-dead", index: 55, length: 10, score: 0.2 },
     ]
   },
   {
     comment_id: 2,
-    score: 0.1,
+    score: 0.4,
     tokens: [
-      { word: "cesspool", index: 20, length: 8, score: 0.8 },
-      { word: "stupidity", index: 42, length: 9, score: 0.9 },
+      { word: "cesspool", index: 20, length: 8, score: 0.3 },
+      { word: "stupidity", index: 42, length: 9, score: 0.5 },
     ]
   },
   {
     comment_id: 3,
-    score: 0.3,
+    score: 1,
     tokens: [
-      { word: "watching", index: 7, length: 8, score: 0.7 },
     ]
   },
   {
     comment_id: 4,
-    score: 0.15,
+    score: 1,
     tokens: [
-      { word: "priceless", index: 24, length: 9, score: 0.75 },
     ]
   },
   {
     comment_id: 5,
-    score: 0.25,
+    score: 1,
     tokens: [
-      { word: "best", index: 12, length: 4, score: 0.9 },
     ]
   },
   {
     comment_id: 6,
-    score: 0.05,
+    score: 0.6,
     tokens: [
       { word: "playful", index: 18, length: 8, score: 0.6 },
     ]
   },
   {
     comment_id: 7,
-    score: 0.35,
+    score: 0.2,
     tokens: [
-      { word: "best", index: 0, length: 4, score: 0.9 },
+      { word: "best", index: 0, length: 4, score: 0.2 },
     ]
   },
   {
     comment_id: 8,
-    score: 0.12,
+    score: 0.8,
     tokens: [
       { word: "watch", index: 10, length: 5, score: 0.8 },
     ]
   },
   {
     comment_id: 9,
-    score: 0.02,
+    score: 0.2,
     tokens: [
-      { word: "priceless", index: 6, length: 9, score: 0.75 },
+      { word: "priceless", index: 6, length: 9, score: 0.2 },
     ]
   },
   {
     comment_id: 10,
-    score: 0.22,
+    score: 0.35,
     tokens: [
-      { word: "cutest", index: 8, length: 6, score: 0.85 },
+      { word: "best", index: 8, length: 6, score: 0.35 },
     ]
   },
 ];
@@ -350,7 +354,9 @@ export default function Component() {
   const [comments, setComments] = useState<Comment[]|null|undefined>()
   const [commentThreshold, setCommentThreshold] = useState(.6)
   const [hideRedactedComments, setHideRedactedComments] = useState(false)
+  const [animationPaused, setAnimationPaused] = useState(false)
   const [canEditThreshold, setCanEditThreshold] = useState(false)
+
   const handleSearch = (e:FormEvent) => {
     e.preventDefault()
     const results = defaultSearchResults.filter((video) => video.title.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -367,16 +373,20 @@ export default function Component() {
     setSearchResults([])
     setSearchQuery(video.title)
     setSelectedVideo(null) // empty
+    handleAnimationPausedChange(true)
+
     setTimeout(() => {
       setSelectedVideo(video);
       setComments(defaultComments);
-      }, 600 // set again
+      }, 400 // set again
     )
   }
   const resetSelection = () => {
     setSelectedVideo(null)
     setSearchResults(defaultSearchResults)
     setSearchQuery('')
+    handleAnimationPausedChange(false)
+
   }
   const handleCommentThresholdChange = (value:number) => {
     setCommentThreshold(value)
@@ -386,6 +396,10 @@ export default function Component() {
   }
   const toggleCanEditThreshold = () => {
     setCanEditThreshold(!canEditThreshold)
+  }
+  const handleAnimationPausedChange = (value: boolean) => {
+    document.body.classList.toggle('paused', value);
+    setAnimationPaused(value);
   }
 
   const humanize = (input: number | string) => humanize_value(input)
@@ -434,144 +448,149 @@ export default function Component() {
   
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <header className="px-4 lg:px-6 md:h-14 items-center md:flex">
-        <Link href="/" className="flex items-center justify-center" prefetch={false}>
-          <p className="text-6xl gluten-family text-red-600">mensh</p>
-          <span className="text-sm font-medium hover:underline underline-offset-4 pl-2 pr-3">YouTube</span>
-        </Link>
-        <nav className="md:ml-auto flex gap-4 sm:gap-6 md:w-full justify-around md:justify-end text-red-900 w-1/2 m-auto">
-          <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>TikTok</Link>
-          <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>Instagram </Link>
-        </nav>
-      </header>
-      <section className="w-full pt-10 md:pt-20 lg:pt-28 container mx-auto pb-7">
-        <div className="container space-y-10 xl:space-y-16">
-          <div className="grid gap-4 px-4 md:grid-cols-2 md:gap-16">
-            {selectedVideo ? (
-              <div>
-                <iframe className="w-full aspect-video rounded-xl" src={selectedVideo.videoUrl} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                <div className="mt-4 video-details">
-                  <div className="flex space-between items-start">
-                    <h2 className="font-bold text-xl grow">{selectedVideo.title}</h2>
-                    <Button variant="ghost" size="sm-h7" onClick={()=>resetSelection()}>
-                        &times;
-                    </Button>
-                  </div>
-  
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
-                    <Avatar>
-                      <Image width="48" height="48" src={selectedVideo.avatar} alt={selectedVideo.username} />
-                    </Avatar>
-                    <span className="font-medium">{selectedVideo.username}</span>
-                    <span>{selectedVideo.postedDate}</span>
-                  </div>
-                  <div className="text-gray-600 flex justify-around">
-                    <Kpi value={humanize(selectedVideo.likes)} label="likes"></Kpi>
-                    <Kpi value={humanize(selectedVideo.views)} label="views"></Kpi>
-                    <Kpi value={humanize(selectedVideo.comments)} label="comments"></Kpi>
+
+      <div className="animated-gradient" data-animating={!animationPaused}>
+        <header className="px-4 lg:px-6 md:h-14 items-center md:flex">
+          <Link href="/" className="flex items-center justify-center" prefetch={false}>
+            <p className={"text-6xl text-red-600 " + gluten.className}>mensh</p>
+            <span className="text-sm font-medium hover:underline underline-offset-4 pl-2 pr-3">YouTube</span>
+          </Link>
+          <nav className="md:ml-auto flex gap-4 sm:gap-6 md:w-full justify-around md:justify-end text-red-900 w-1/2 m-auto">
+            <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>TikTok</Link>
+            <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>Instagram </Link>
+          </nav>
+        </header>
+        <section className="w-full pt-10 md:pt-20 lg:pt-28 container mx-auto pb-10">
+          <div className="container space-y-10 xl:space-y-16">
+            <div className="grid gap-4 px-4 md:grid-cols-2 md:gap-16">
+              {selectedVideo ? (
+                <div>
+                  <iframe className="w-full aspect-video rounded-xl" src={selectedVideo.videoUrl} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                  <div className="mt-4 video-details">
+                    <div className="flex space-between items-start">
+                      <h2 className="font-bold text-xl grow">{selectedVideo.title}</h2>
+                      <Button variant="ghost" size="sm-h7" onClick={()=>resetSelection()}>
+                          &times;
+                      </Button>
+                    </div>
+    
+                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                      <Avatar>
+                        <Image width="48" height="48" src={selectedVideo.avatar} alt={selectedVideo.username} />
+                      </Avatar>
+                      <span className="font-medium">{selectedVideo.username}</span>
+                      <span>{selectedVideo.postedDate}</span>
+                    </div>
+                    <div className="text-gray-600 flex justify-around">
+                      <Kpi value={humanize(selectedVideo.likes)} label="likes"></Kpi>
+                      <Kpi value={humanize(selectedVideo.views)} label="views"></Kpi>
+                      <Kpi value={humanize(selectedVideo.comments)} label="comments"></Kpi>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div>
-                <Image
-                  src="/mensh.png"
-                  width="600"
-                  height="600"
-                  alt="Mensh"
-                  className="w-full homepage-hero-image aspect-video overflow-hidden rounded-xl object-cover"
-                    priority
-                  />
-                  <h2 className="font-bold md:text-xl mt-4 text-center">
-                    Protect yourself from harmful content
-                  </h2>
-              </div>
-            )}
-            <div className="flex flex-col items-start space-y-8 md:space-y-4">
-              <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem] text-center md:text-left">
-                Find your Video
-              </h1>
-              <form className="w-full max-w-lg" onSubmit={(e)=>handleSearch(e)}>
-                <div className="relative">
-                  <Input
-                    type="text"
-                    placeholder="Search for a video"
-                    className="w-full"
-                    value={searchQuery}
-                    onChange={(e)=>handleInputChange(e)}
-                    onFocus={() => setSearchResults(defaultSearchResults)}
-                    onBlur={() => setTimeout(()=>setSearchResults([]), 100)}
-                  />
-                  
-                  <Button type="submit" className="absolute top-1/2 right-0 -translate-y-1/2">
-                    <SearchIcon className="h-5 w-5" />
-                  </Button>
+              ) : (
+                <div>
+                  <Image
+                    src="/mensh.png"
+                    width="600"
+                    height="600"
+                    alt="Mensh"
+                    className="w-full homepage-hero-image aspect-video overflow-hidden rounded-xl object-cover"
+                      priority
+                    />
+                    <h2 className="font-bold md:text-xl mt-4 text-center">
+                      Protect yourself from harmful content
+                    </h2>
+                </div>
+              )}
+              <div className="flex flex-col items-start space-y-8 md:space-y-4">
+                <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem] text-center md:text-left">
+                  Find your Video
+                </h1>
+                <form className="w-full max-w-lg" onSubmit={(e)=>handleSearch(e)}>
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      placeholder="Search for a video"
+                      className="w-full"
+                      value={searchQuery}
+                      onChange={(e)=>handleInputChange(e)}
+                      onFocus={() => setSearchResults(defaultSearchResults)}
+                      onBlur={() => setTimeout(()=>setSearchResults([]), 100)}
+                    />
+                    
+                    <Button type="submit" className="absolute top-1/2 right-0 -translate-y-1/2">
+                      <SearchIcon className="h-5 w-5" />
+                    </Button>
 
-                  {searchResults && searchResults.length > 0 && (
-                    <div className="search-results absolute top-full left-0 w-full bg-slate-50 dark:bg-gray-800 rounded-lg shadow-lg mt-2 z-10 max-h-[300px] overflow-y-auto">
-                      <ul className="py-2">
-                        {searchResults.map((result) => (
-                          <li
-                            key={result.id}
-                            className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                            onClick={() => handleVideoSelect(result)}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-4">
-                                <Avatar>
-                                  <Image src={result.avatar} width="48" height="48" alt="" />
-                                </Avatar>
-                                <div>
-                                  <h3 className="font-medium">{result.title}</h3>
-                                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                                    <span>{result.views} views</span> &middot; <span>{result.postedDate}</span>
+                    {searchResults && searchResults.length > 0 && (
+                      <div className="search-results absolute top-full left-0 w-full bg-slate-50 dark:bg-gray-800 rounded-lg shadow-lg mt-2 z-10 max-h-[300px] overflow-y-auto">
+                        <ul className="py-2">
+                          {searchResults.map((result) => (
+                            <li
+                              key={result.id}
+                              className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                              onClick={() => handleVideoSelect(result)}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                  <Avatar>
+                                    <Image src={result.avatar} width="48" height="48" alt="" />
+                                  </Avatar>
+                                  <div>
+                                    <h3 className="font-medium">{result.title}</h3>
+                                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                                      <span>{result.views} views</span> &middot; <span>{result.postedDate}</span>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </form>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </form>
 
-              {searchResults && searchResults.length || selectedVideo ?  (<p></p>) : (
-                <blockquote className="bg-gray-200 rounded-xl text-center drop-shadow-lg hover:drop-shadow-xl px-9 pt-7 pb-5">
-                  <p className="text-3xl font-serif text-center text-red-600 gluten-family mb-3">
-                    Simplify engagement
-                  </p>
-                  {/* <marquee className="mb-5 text-sm text-red-900" behaviour="alternate">
-                    “Say goodbye to time-wasting comments and join your community!” 😊
-                  </marquee> */}
-                  <p className="mb-5 text-sm text-red-900" >
-                    “Say goodbye to time-wasting comments and join your community!” 😊
-                  </p>
-                  <Button variant="destructive" onClick={()=>(document.querySelector('input[type="text"]') as HTMLInputElement)?.focus()}>
-                    Get started
-                    <ArrowBigUpIcon />
-                  </Button>
-                </blockquote>
-              ) 
-              }
+                {selectedVideo ?  (<p></p>) : (
+                  <blockquote className="bg-gray-200 rounded-xl text-center drop-shadow-lg hover:drop-shadow-xl px-9 pt-7 pb-5">
+                    <p className={"text-3xl font-serif text-center text-pink-600 gluten-family mb-3 " + gluten.className}>
+                      Simplify engagement
+                    </p>
+                    {/* <marquee className="mb-5 text-sm text-red-900" behaviour="alternate">
+                      “Say goodbye to time-wasting comments and join your community!” 😊
+                    </marquee> */}
+                    <p className="mb-5 text-sm text-pink-900 " >
+                      “Say goodbye to time-wasting comments and join your community!” 😊
+                    </p>
+                    <Button className="bg-pink-600 hover:bg-pink-700" variant="destructive" onClick={()=>(document.querySelector('input[type="text"]') as HTMLInputElement)?.focus()}>
+                      Get started
+                      <ArrowBigUpIcon />
+                    </Button>
+                  </blockquote>
+                ) 
+                }
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
       
       <main className="flex-1">
-        {selectedVideo ? (<span></span>):(
+        {selectedVideo ? (
+          <p></p>
+        ):(
           <SparklesCore
-          background="transparent"
-          minSize={0.4}
-          maxSize={2}
-          particleDensity={1500}
-          className="w-full h-10 absolute -mt-5"
-          particleColor="#FFFFFF"
-        />
+            background="transparent"
+            minSize={0.4}
+            maxSize={1}
+            particleDensity={1500}
+            className="w-full h-20 absolute -mt-10"
+            particleColor="#FDFDFD"
+          />
         )}
-        <section className="bg-gray-50 pb-10" style={{minHeight:'50vh'}}>
+        <section className=" bg-gray-50 pb-10" style={{minHeight:'50vh'}}>
           {selectedVideo ? (
             <div className="video-details w-full pt-6 container mx-auto ">
               <div className="mt-3">
@@ -656,11 +675,12 @@ export default function Component() {
               </div>
             </div>
           ) : (
-            <p></p>  
+            <p></p>
           )
           }
         </section>
       </main>
+
     </div>
   )
 }
@@ -716,7 +736,6 @@ function ThumbsDownIcon(props:any) {
   )
 }
 
-
 function ThumbsUpIcon(props:any) {
   return (
     <svg
@@ -755,6 +774,7 @@ function MessageCircleIcon(props:any) {
     </svg>
   )
 }
+
 function CommentFooter(props: any) {
   const [showReplyModal, setShowReplyModal] = useState(false)
   const toggleShowReplyModal = () => {
@@ -778,11 +798,12 @@ function CommentFooter(props: any) {
     </div>
   )
 }
+
 function MenshRating(props: any) {
   const value = Number(props.value);
   var color = 'bg-red-500';
   if (value > .3) color = 'bg-yellow-500';
-  if (value > .6) color = 'bg-green-500';
+  if (value > .6) color = 'not-bg-green-500';
 
   return (
     <span className={color + ' p-1.5 rounded-full ratio-square'}></span>

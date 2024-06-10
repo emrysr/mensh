@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Gluten:wght@100..900&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,15 +15,8 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
-
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
@@ -34,7 +25,6 @@ body {
   }
 }
 
-
 .comment mark {
   background-color: #000; /* Set the background color to black */
   color: #000; /* Set the text color to black */
@@ -42,15 +32,6 @@ body {
   border-radius: 0.2em; /* Apply rounded corners */
   pointer-events: none;
   user-select: none;
-}
-
-.gluten-family {
-  font-family: "Gluten", cursive;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings:
-    "slnt" 0;
 }
 
 .comments-title[open] #open.icon {
@@ -73,6 +54,21 @@ body {
 .homepage-hero-image{
   filter: invert(15%);
 }
+
 body {
   background: radial-gradient(circle farthest-corner at 100% 0%, #ff6378ff 0%, #ff63d3ff 50%, #ffd063ff 100%);background-blend-mode: color-dodge;
+  background-blend-mode: color-dodge;
+  animation: AnimationName 12s infinite alternate;
+}
+
+.paused {
+  animation-play-state: paused;
+}
+
+@keyframes AnimationName {
+  0%{background-position:0% 0%;background-size: 600% 600%}
+  50%{
+    background-position:68% 100%;background-size: 100% 100%;
+  }
+  100%{background-position:100% 0%;background-size: 600% 600%}
 }
