@@ -39,6 +39,9 @@ interface Comment {
   likes: number;
   dislikes: number;
 }
+interface Match {
+  word: string; index: number; length: number; score: number;
+}
 
 const humanize_value = (input:number|string) => {
   const number = Number(input);
@@ -374,7 +377,7 @@ export default function Component() {
   const getTokens = (comment_id: number) => getCommentToken(comment_id)?.tokens || [];
   const isAccepted = (comment_id: number) => getScore(comment_id) >= commentThreshold;
 
-  const highlightMatches = (comment: string, matches) => {
+  const highlightMatches = (comment: string, matches: Match[]) => {
     let highlighted_comment = comment;
     matches.forEach(match => {
       if (!match) return;
@@ -386,7 +389,7 @@ export default function Component() {
     });
     return highlighted_comment;
   }
-  function replaceAtIndex(inputString, targetString, replacement, startIndex, targetLength) {
+  function replaceAtIndex(inputString:string, targetString:string, replacement:string, startIndex:number, targetLength:number) {
     const regex = new RegExp(targetString, 'gi'); // Match globally
     let match;
     let replacedString = inputString;
