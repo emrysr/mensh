@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge"
 import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
+import { BackgroundGradient } from "@/components/ui/background-gradient";
 import Image from "next/image";
 import { ArrowBigUpIcon, ChevronDown, ChevronRight, ChevronUp } from "lucide-react"
 import { SparklesCore } from "@/components/ui/sparkles";
@@ -450,17 +451,18 @@ export default function Component() {
     <div className="flex flex-col min-h-[100dvh]">
 
       <div className="animated-gradient" data-animating={!animationPaused}>
-        <header className="px-4 lg:px-6 md:h-14 items-center md:flex">
+        <div className="md:bg-gradient-to-br pt-14 absolute w-full pointer-events-none from-pink-100 to-transparent" style={{zIndex:-1}}></div>
+        <header className="bg-white md:bg-transparent px-4 lg:px-6 md:h-14 items-center md:flex">
           <Link href="/" className="flex items-center justify-center" prefetch={false}>
-            <p className={"text-6xl text-red-600 " + gluten.className}>mensh</p>
+            <p className={"text-6xl text-red-600 drop-shadow-2xl " + gluten.className}>mensh</p>
             <span className="text-sm font-medium hover:underline underline-offset-4 pl-2 pr-3">YouTube</span>
           </Link>
-          <nav className="md:ml-auto flex gap-4 sm:gap-6 md:w-full justify-around md:justify-end text-red-900 w-1/2 m-auto">
+          <nav className="md:ml-auto flex gap-4 sm:gap-6 md:w-full justify-around md:justify-end text-red-950 w-1/2 m-auto">
             <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>TikTok</Link>
             <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>Instagram </Link>
           </nav>
         </header>
-        <section className="w-full pt-10 md:pt-20 lg:pt-28 container mx-auto pb-10">
+        <section className="w-full pt-10 md:pt-20 lg:pt-28 container mx-auto pb-5">
           <div className="container space-y-10 xl:space-y-16">
             <div className="grid gap-4 px-4 md:grid-cols-2 md:gap-16">
               {selectedVideo ? (
@@ -578,18 +580,6 @@ export default function Component() {
       </div>
       
       <main className="flex-1">
-        {selectedVideo ? (
-          <p></p>
-        ):(
-          <SparklesCore
-            background="transparent"
-            minSize={0.4}
-            maxSize={1}
-            particleDensity={1500}
-            className="w-full h-20 absolute -mt-10"
-            particleColor="#FDFDFD"
-          />
-        )}
         <section className=" bg-gray-50 pb-10" style={{minHeight:'50vh'}}>
           {selectedVideo ? (
             <div className="video-details w-full pt-6 container mx-auto ">
@@ -675,9 +665,21 @@ export default function Component() {
               </div>
             </div>
           ) : (
-            <p></p>
-          )
-          }
+            <div className="md:w-[40rem] h-60 relative m-auto stacked half-circle-mask">
+              <div className="md:inset-x-20 top-0 bg-gradient-to-r from-transparent via-pink-600 to-transparent h-[2px] w-3/4 blur-sm" />
+              <div className="md:inset-x-20 top-0 bg-gradient-to-r from-transparent via-pink-600 to-transparent h-px w-3/4" />
+              <div className="md:inset-x-60 top-0 bg-gradient-to-r from-transparent via-rose-300 to-transparent h-[5px] w-1/4 blur-sm" />
+              <div className="md:inset-x-60 top-0 bg-gradient-to-r from-transparent via-rose-300 to-transparent h-px w-1/4" />
+              <SparklesCore
+                background="transparent"
+                minSize={0.4}
+                maxSize={1}
+                particleDensity={1500}
+                className="w-full h-full"
+                particleColor="#ff969e"
+              />
+            </div>
+          )}
         </section>
       </main>
 

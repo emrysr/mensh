@@ -72,3 +72,17 @@ body {
   }
   100%{background-position:100% 0%;background-size: 600% 600%}
 }
+
+.stacked {
+  display: grid;
+  isolation: isolate;
+  place-items: start center;
+}
+.stacked > * {
+  grid-column: 1/-1;
+  grid-row: 1/-1;
+}
+
+.half-circle-mask {
+  mask-image: radial-gradient(ellipse 45% 100% at top, black, transparent);
+}
