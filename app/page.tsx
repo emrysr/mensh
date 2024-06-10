@@ -185,52 +185,69 @@ const comment_tokens = [
   },
   {
     comment_id: 2,
-    score: 0.3,
+    score: 0.1,
     tokens: [
-      { word: "cesspool", index: 27, length: 8, score: 1 },
+      { word: "cesspool", index: 20, length: 8, score: 0.8 },
+      { word: "stupidity", index: 42, length: 9, score: 0.9 },
     ]
   },
   {
     comment_id: 3,
-    score: 0.51,
-    tokens: []
+    score: 0.3,
+    tokens: [
+      { word: "watching", index: 7, length: 8, score: 0.7 },
+    ]
   },
   {
     comment_id: 4,
-    score: 0.3,
-    tokens: []
+    score: 0.15,
+    tokens: [
+      { word: "priceless", index: 24, length: 9, score: 0.75 },
+    ]
   },
   {
     comment_id: 5,
-    score: 0.8,
-    tokens: []
+    score: 0.25,
+    tokens: [
+      { word: "best", index: 12, length: 4, score: 0.9 },
+    ]
   },
   {
     comment_id: 6,
-    score: 0.6,
-    tokens: []
+    score: 0.05,
+    tokens: [
+      { word: "playful", index: 18, length: 8, score: 0.6 },
+    ]
   },
   {
     comment_id: 7,
-    score: 0.9,
-    tokens: []
+    score: 0.35,
+    tokens: [
+      { word: "best", index: 0, length: 4, score: 0.9 },
+    ]
   },
   {
     comment_id: 8,
-    score: 0.8,
-    tokens: []
+    score: 0.12,
+    tokens: [
+      { word: "watch", index: 10, length: 5, score: 0.8 },
+    ]
   },
   {
     comment_id: 9,
-    score: 0.8,
-    tokens: []
+    score: 0.02,
+    tokens: [
+      { word: "priceless", index: 6, length: 9, score: 0.75 },
+    ]
   },
   {
     comment_id: 10,
-    score: 9,
-    tokens: []
+    score: 0.22,
+    tokens: [
+      { word: "cutest", index: 8, length: 6, score: 0.85 },
+    ]
   },
-]
+];
 
 const defaultComments:Comment[] = [
   {
