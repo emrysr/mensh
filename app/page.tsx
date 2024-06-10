@@ -16,6 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import Image from "next/image";
 import { ArrowBigUpIcon, ChevronDown, ChevronRight, ChevronUp } from "lucide-react"
+import { SparklesCore } from "@/components/ui/sparkles";
 
 interface Result {
   id: number;
@@ -443,123 +444,133 @@ export default function Component() {
           <Link href="#" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>Instagram </Link>
         </nav>
       </header>
-      <main className="flex-1">
-        <section className="w-full pt-10 md:pt-20 lg:pt-28 container mx-auto pb-7">
-          <div className="container space-y-10 xl:space-y-16">
-            <div className="grid gap-4 px-4 md:grid-cols-2 md:gap-16">
-              {selectedVideo ? (
-                <div>
-                  <iframe className="w-full aspect-video rounded-xl" src={selectedVideo.videoUrl} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-                  <div className="mt-4 video-details">
-                    <div className="flex space-between items-start">
-                      <h2 className="font-bold text-xl grow">{selectedVideo.title}</h2>
-                      <Button variant="ghost" size="sm-h7" onClick={()=>resetSelection()}>
-                         &times;
-                      </Button>
-                    </div>
-   
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
-                      <Avatar>
-                        <Image width="48" height="48" src={selectedVideo.avatar} alt={selectedVideo.username} />
-                      </Avatar>
-                      <span className="font-medium">{selectedVideo.username}</span>
-                      <span>{selectedVideo.postedDate}</span>
-                    </div>
-                    <div className="text-gray-600 flex justify-around">
-                      <Kpi value={humanize(selectedVideo.likes)} label="likes"></Kpi>
-                      <Kpi value={humanize(selectedVideo.views)} label="views"></Kpi>
-                      <Kpi value={humanize(selectedVideo.comments)} label="comments"></Kpi>
-                    </div>
+      <section className="w-full pt-10 md:pt-20 lg:pt-28 container mx-auto pb-7">
+        <div className="container space-y-10 xl:space-y-16">
+          <div className="grid gap-4 px-4 md:grid-cols-2 md:gap-16">
+            {selectedVideo ? (
+              <div>
+                <iframe className="w-full aspect-video rounded-xl" src={selectedVideo.videoUrl} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+                <div className="mt-4 video-details">
+                  <div className="flex space-between items-start">
+                    <h2 className="font-bold text-xl grow">{selectedVideo.title}</h2>
+                    <Button variant="ghost" size="sm-h7" onClick={()=>resetSelection()}>
+                        &times;
+                    </Button>
+                  </div>
+  
+                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    <Avatar>
+                      <Image width="48" height="48" src={selectedVideo.avatar} alt={selectedVideo.username} />
+                    </Avatar>
+                    <span className="font-medium">{selectedVideo.username}</span>
+                    <span>{selectedVideo.postedDate}</span>
+                  </div>
+                  <div className="text-gray-600 flex justify-around">
+                    <Kpi value={humanize(selectedVideo.likes)} label="likes"></Kpi>
+                    <Kpi value={humanize(selectedVideo.views)} label="views"></Kpi>
+                    <Kpi value={humanize(selectedVideo.comments)} label="comments"></Kpi>
                   </div>
                 </div>
-              ) : (
-                <div>
-                  <Image
-                    src="/mensh.png"
-                    width="600"
-                    height="600"
-                    alt="Mensh"
-                    className="w-full homepage-hero-image aspect-video overflow-hidden rounded-xl object-cover"
-                      priority
-                    />
-                    <h2 className="font-bold md:text-xl mt-4 text-center">
-                      Protect yourself from harmful content
-                    </h2>
-                </div>
-              )}
-              <div className="flex flex-col items-start space-y-8 md:space-y-4">
-                <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem] text-center md:text-left">
-                  Find your Video
-                </h1>
-                <form className="w-full max-w-lg" onSubmit={(e)=>handleSearch(e)}>
-                  <div className="relative">
-                    <Input
-                      type="text"
-                      placeholder="Search for a video"
-                      className="w-full"
-                      value={searchQuery}
-                      onChange={(e)=>handleInputChange(e)}
-                      onFocus={() => setSearchResults(defaultSearchResults)}
-                      onBlur={() => setTimeout(()=>setSearchResults([]), 100)}
-                    />
-                    
-                    <Button type="submit" className="absolute top-1/2 right-0 -translate-y-1/2">
-                      <SearchIcon className="h-5 w-5" />
-                    </Button>
+              </div>
+            ) : (
+              <div>
+                <Image
+                  src="/mensh.png"
+                  width="600"
+                  height="600"
+                  alt="Mensh"
+                  className="w-full homepage-hero-image aspect-video overflow-hidden rounded-xl object-cover"
+                    priority
+                  />
+                  <h2 className="font-bold md:text-xl mt-4 text-center">
+                    Protect yourself from harmful content
+                  </h2>
+              </div>
+            )}
+            <div className="flex flex-col items-start space-y-8 md:space-y-4">
+              <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem] text-center md:text-left">
+                Find your Video
+              </h1>
+              <form className="w-full max-w-lg" onSubmit={(e)=>handleSearch(e)}>
+                <div className="relative">
+                  <Input
+                    type="text"
+                    placeholder="Search for a video"
+                    className="w-full"
+                    value={searchQuery}
+                    onChange={(e)=>handleInputChange(e)}
+                    onFocus={() => setSearchResults(defaultSearchResults)}
+                    onBlur={() => setTimeout(()=>setSearchResults([]), 100)}
+                  />
+                  
+                  <Button type="submit" className="absolute top-1/2 right-0 -translate-y-1/2">
+                    <SearchIcon className="h-5 w-5" />
+                  </Button>
 
-                    {searchResults && searchResults.length > 0 && (
-                      <div className="search-results absolute top-full left-0 w-full bg-slate-50 dark:bg-gray-800 rounded-lg shadow-lg mt-2 z-10 max-h-[300px] overflow-y-auto">
-                        <ul className="py-2">
-                          {searchResults.map((result) => (
-                            <li
-                              key={result.id}
-                              className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                              onClick={() => handleVideoSelect(result)}
-                            >
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                  <Avatar>
-                                    <Image src={result.avatar} width="48" height="48" alt="" />
-                                  </Avatar>
-                                  <div>
-                                    <h3 className="font-medium">{result.title}</h3>
-                                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                                      <span>{result.views} views</span> &middot; <span>{result.postedDate}</span>
-                                    </div>
+                  {searchResults && searchResults.length > 0 && (
+                    <div className="search-results absolute top-full left-0 w-full bg-slate-50 dark:bg-gray-800 rounded-lg shadow-lg mt-2 z-10 max-h-[300px] overflow-y-auto">
+                      <ul className="py-2">
+                        {searchResults.map((result) => (
+                          <li
+                            key={result.id}
+                            className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                            onClick={() => handleVideoSelect(result)}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-4">
+                                <Avatar>
+                                  <Image src={result.avatar} width="48" height="48" alt="" />
+                                </Avatar>
+                                <div>
+                                  <h3 className="font-medium">{result.title}</h3>
+                                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    <span>{result.views} views</span> &middot; <span>{result.postedDate}</span>
                                   </div>
                                 </div>
                               </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                </form>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </form>
 
-                {searchResults && searchResults.length || selectedVideo ?  (<p></p>) : (
-                  <blockquote className="bg-gray-200 rounded-xl text-center drop-shadow-lg hover:drop-shadow-xl px-9 pt-7 pb-5">
-                    <p className="text-3xl font-serif text-center text-red-600 gluten-family mb-3">
-                      Simplify engagement
-                    </p>
-                    {/* <marquee className="mb-5 text-sm text-red-900" behaviour="alternate">
-                      “Say goodbye to time-wasting comments and join your community!” 😊
-                    </marquee> */}
-                    <p className="mb-5 text-sm text-red-900" >
-                      “Say goodbye to time-wasting comments and join your community!” 😊
-                    </p>
-                    <Button variant="destructive" onClick={()=>(document.querySelector('input[type="text"]') as HTMLInputElement)?.focus()}>
-                      Get started
-                      <ArrowBigUpIcon />
-                    </Button>
-                  </blockquote>
-                ) 
-                }
-              </div>
+              {searchResults && searchResults.length || selectedVideo ?  (<p></p>) : (
+                <blockquote className="bg-gray-200 rounded-xl text-center drop-shadow-lg hover:drop-shadow-xl px-9 pt-7 pb-5">
+                  <p className="text-3xl font-serif text-center text-red-600 gluten-family mb-3">
+                    Simplify engagement
+                  </p>
+                  {/* <marquee className="mb-5 text-sm text-red-900" behaviour="alternate">
+                    “Say goodbye to time-wasting comments and join your community!” 😊
+                  </marquee> */}
+                  <p className="mb-5 text-sm text-red-900" >
+                    “Say goodbye to time-wasting comments and join your community!” 😊
+                  </p>
+                  <Button variant="destructive" onClick={()=>(document.querySelector('input[type="text"]') as HTMLInputElement)?.focus()}>
+                    Get started
+                    <ArrowBigUpIcon />
+                  </Button>
+                </blockquote>
+              ) 
+              }
             </div>
           </div>
-        </section>
-
+        </div>
+      </section>
+      
+      <main className="flex-1">
+        {selectedVideo ? (<span></span>):(
+          <SparklesCore
+          background="transparent"
+          minSize={0.4}
+          maxSize={2}
+          particleDensity={1500}
+          className="w-full h-10 absolute -mt-5"
+          particleColor="#FFFFFF"
+        />
+        )}
         <section className="bg-gray-50 pb-10" style={{minHeight:'50vh'}}>
           {selectedVideo ? (
             <div className="video-details w-full pt-6 container mx-auto ">
