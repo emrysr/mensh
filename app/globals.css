@@ -35,7 +35,7 @@ body {
 }
 
 
-.is-redacted {
+.comment mark {
   background-color: #000; /* Set the background color to black */
   color: #000; /* Set the text color to black */
   display: inline-block; /* Display as an inline block */
