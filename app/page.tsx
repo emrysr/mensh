@@ -14,11 +14,13 @@ import { Badge } from "@/components/ui/badge"
 import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
-import { BackgroundGradient } from "@/components/ui/background-gradient";
+
 import Image from "next/image";
 import { ArrowBigUpIcon, ChevronDown, ChevronRight, ChevronUp } from "lucide-react"
 import { SparklesCore } from "@/components/ui/sparkles";
 import { Gluten } from "next/font/google";
+
+import { BasicLamp } from "@/components/ui/lamp";
 
 const gluten = Gluten({ subsets: ["latin"] });
 
@@ -665,18 +667,17 @@ export default function Component() {
               </div>
             </div>
           ) : (
-            <div className="md:w-[40rem] h-60 relative m-auto stacked half-circle-mask">
-              <div className="md:inset-x-20 top-0 bg-gradient-to-r from-transparent via-pink-600 to-transparent h-[2px] w-3/4 blur-sm" />
+              <div className="md:w-[40rem] h-60 relative m-auto stacked half-circle-mask">
+              <div className="md:inset-x-20 top-0 bg-gradient-to-r from-transparent via-pink-600 to-transparent h-[3px] w-3/4 blur-sm" />
               <div className="md:inset-x-20 top-0 bg-gradient-to-r from-transparent via-pink-600 to-transparent h-px w-3/4" />
-              <div className="md:inset-x-60 top-0 bg-gradient-to-r from-transparent via-rose-300 to-transparent h-[5px] w-1/4 blur-sm" />
+              <div className="md:inset-x-60 top-0 bg-gradient-to-r from-transparent via-red-300 to-transparent h-[6px] w-1/4 blur-sm" />
               <div className="md:inset-x-60 top-0 bg-gradient-to-r from-transparent via-rose-300 to-transparent h-px w-1/4" />
               <SparklesCore
                 background="transparent"
-                minSize={0.4}
-                maxSize={1}
-                particleDensity={1500}
-                className="w-full h-full"
-                particleColor="#ff969e"
+                minSize={0.2}
+                maxSize={2.3}
+                particleDensity={1000}
+                particleColor="#ff63b1"
               />
             </div>
           )}
@@ -804,10 +805,11 @@ function CommentFooter(props: any) {
 function MenshRating(props: any) {
   const value = Number(props.value);
   var color = 'bg-red-500';
-  if (value > .3) color = 'bg-yellow-500';
-  if (value > .6) color = 'not-bg-green-500';
+  if (value > .3) color = 'bg-amber-500';
+  if (value > .6) color = 'bg-green-500';
 
   return (
     <span className={color + ' p-1.5 rounded-full ratio-square'}></span>
   )
 }
+

@@ -84,5 +84,5 @@ body {
 }
 
 .half-circle-mask {
-  mask-image: radial-gradient(ellipse 45% 100% at top, black, transparent);
+  mask-image: radial-gradient(ellipse 20% 100% at top, black, transparent);
 }
