@@ -14,9 +14,6 @@
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-  .comment.open mark {
-    box-shadow: 0px 2px 0px -1px white;
-  }
 }
 body {
   color: rgb(var(--foreground-rgb));
@@ -40,7 +37,7 @@ body {
 .comment.open mark {
   background: transparent;
   color: inherit;
-  box-shadow: 0px 2px 0px -1px black;
+  box-shadow: 0px 2px 0px -1px currentColor;
 }
 .comments-title[open] #open.icon {
   display: inline-block;
