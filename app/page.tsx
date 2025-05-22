@@ -582,7 +582,7 @@ export default function Component() {
       </div>
       
       <main className="flex-1">
-        <section className=" bg-gray-50 pb-10" style={{minHeight:'50vh'}}>
+        <section className=" bg-gray-50 pb-10 dark:bg-gray-950" style={{minHeight:'50vh'}}>
           {selectedVideo ? (
             <div className="video-details w-full pt-6 container mx-auto ">
               <div className="mt-3">
@@ -644,11 +644,11 @@ export default function Component() {
                   {comments?.filter((comment) => (hideRedactedComments ? isAccepted(comment.id) : true))
                     .map((comment) => {
                       var commentClasses = ['mt-1'];
-                      return <div key={comment.id} className="comment flex items-start gap-4 hover:drop-shadow hover:bg-white">
+                      return <div key={comment.id} className="comment flex items-start gap-4 hover:drop-shadow hover:bg-white dark:hover:bg-gray-800">
                           <Avatar>
                             <Image width="48" height="48" src={comment.avatar} alt={comment.username} />
                           </Avatar>
-                          <div className="flex-1">
+                          <div className="flex-1 comment-details">
                             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                               <span className="font-medium">{comment.username}</span>
                               <span>{comment.postedDate}</span>
