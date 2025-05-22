@@ -398,7 +398,7 @@ export default function Component() {
   const handleHideRedactedComments = () => {
     setHideRedactedComments(!hideRedactedComments)
   }
-  const handleHideRedactions = () = {
+  const handleHideRedactions = () => {
     setHideRedactions(!hideRedactions)
   }
   const toggleCanEditThreshold = () => {
@@ -642,7 +642,7 @@ export default function Component() {
                         <div>
                           <Label htmlFor="hideRedactions" className="flex items-center gap-4">
                             <Checkbox
-                              id="hideRedactedComments"
+                              id="hideRedactions"
                               checked={hideRedactions}
                               onCheckedChange={handleHideRedactions}
                             />
