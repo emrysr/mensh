@@ -26,8 +26,9 @@ body {
 }
 
 .comment mark {
-  background-color: #000; /* Set the background color to black */
-  color: #000; /* Set the text color to black */
+  background-color: currentColor; /* Set the background color to black */
+  color: inherit; /* Set the text color to black */
+  
   display: inline-block; /* Display as an inline block */
   border-radius: 0.2em; /* Apply rounded corners */
   pointer-events: none;
