@@ -357,6 +357,7 @@ export default function Component() {
   const [comments, setComments] = useState<Comment[]|null|undefined>()
   const [commentThreshold, setCommentThreshold] = useState(.6)
   const [hideRedactedComments, setHideRedactedComments] = useState(false)
+  const [hideRedactions, setHideRedactions] = useState(false)
   const [animationPaused, setAnimationPaused] = useState(false)
   const [canEditThreshold, setCanEditThreshold] = useState(false)
 
@@ -396,6 +397,9 @@ export default function Component() {
   }
   const handleHideRedactedComments = () => {
     setHideRedactedComments(!hideRedactedComments)
+  }
+  const handleHideRedactions = () = {
+    setHideRedactions(!hideRedactions)
   }
   const toggleCanEditThreshold = () => {
     setCanEditThreshold(!canEditThreshold)
@@ -634,6 +638,15 @@ export default function Component() {
                               onCheckedChange={handleHideRedactedComments}
                             />
                             Hide comments that have been redacted </Label> 
+                        </div>
+                        <div>
+                          <Label htmlFor="hideRedactions" className="flex items-center gap-4">
+                            <Checkbox
+                              id="hideRedactedComments"
+                              checked={hideRedactions}
+                              onCheckedChange={handleHideRedactions}
+                            />
+                            Hide redactions</Label> 
                         </div>
                       </div>
                     )}
