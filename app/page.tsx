@@ -657,7 +657,7 @@ export default function Component() {
                   {comments?.filter((comment) => (hideRedactedComments ? isAccepted(comment.id) : true))
                     .map((comment) => {
                       var commentClasses = ['mt-1'];
-                      return <div key={comment.id} className="comment flex items-start gap-4 hover:drop-shadow hover:bg-white dark:hover:bg-gray-800">
+                      return <div key={comment.id} className={"comment flex items-start gap-4 hover:drop-shadow hover:bg-white dark:hover:bg-gray-800" + (hideRedactions?' open':'')}>
                           <Avatar>
                             <Image width="48" height="48" src={comment.avatar} alt={comment.username} />
                           </Avatar>
